@@ -1,0 +1,35 @@
+export RXX_ROOT=$(python $(dirname $0)/sbin/rxx_root.py)
+export RXX_REPO=${RXX_ROOT}/.L
+export RXX_VENV=${RXX_ROOT}/.3
+export RXX_CONF=${RXX_ROOT}/config
+export RXX_ORIG=$(python3 ${RXX_ROOT}/sbin/rxx_orig.py)
+export PATH=$(python3 ${RXX_ROOT}/sbin/rxx_newpath.py ${RXX_ROOT})
+
+[   "$1" == ""     ] && ${RXX_ROOT}/sbin/usage.sh && exit
+[   -z ${RXX_ORIG} ] && ${RXX_ROOT}/sbin/usage.sh && exit 1
+
+[ ! -d ${RXX_VENV} ] && python3 -m venv ${RXX_VENV}
+
+source ${RXX_VENV}/bin/activate
+source ${RXX_ROOT}/sbin/private
+source ${RXX_ROOT}/sbin/public
+
+
+while [ true ]; do
+    case $1. in
+        -q.)
+            handle-q ;shift
+            ;;
+        -v.)
+            handle-v ;shift
+            ;;
+        -c.)
+            handle-c $2 ;shift ;shift
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+$*
+
